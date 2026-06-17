@@ -52,118 +52,7 @@ interface SyncLog {
 }
 
 // ─── In-Memory Database Storage ───────────────────────────────────────────────
-let orders: Order[] = [
-  {
-    id: "ord-1",
-    orderId: "RS-1021",
-    productName: "Solar Irrigation Pump Controller",
-    quantity: 2,
-    retailerName: "AgriTech Rural Solutions",
-    priority: "High",
-    timestamp: new Date(Date.now() - 3600000 * 8).toISOString(),
-    status: "Delivered",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-2",
-    orderId: "RS-1022",
-    productName: "High-Yield Seed Kits (Wheat)",
-    quantity: 50,
-    retailerName: "Bhoomi Fertilizer Hub",
-    priority: "Medium",
-    timestamp: new Date(Date.now() - 3600000 * 7).toISOString(),
-    status: "In Transit",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-3",
-    orderId: "RS-1023",
-    productName: "Drip Irrigation Pipe Bundle (100m)",
-    quantity: 8,
-    retailerName: "GreenValley Co-operative",
-    priority: "Low",
-    timestamp: new Date(Date.now() - 3600000 * 6).toISOString(),
-    status: "Paid",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-4",
-    orderId: "RS-1024",
-    productName: "LoRa 915MHz Gateway Module",
-    quantity: 1,
-    retailerName: "Krishna Kalyan Bhandar",
-    priority: "High",
-    timestamp: new Date(Date.now() - 3600000 * 5.5).toISOString(),
-    status: "Payment Pending",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-5",
-    orderId: "RS-1025",
-    productName: "Organic Super-Phosphate (25kg)",
-    quantity: 20,
-    retailerName: "Maa Durga Fertilisers",
-    priority: "Medium",
-    timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
-    status: "Pending Approval",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-6",
-    orderId: "RS-1026",
-    productName: "Off-Grid Deep Cycle Battery 200Ah",
-    quantity: 3,
-    retailerName: "Agrikart Cooperative",
-    priority: "High",
-    timestamp: new Date(Date.now() - 3600000 * 4).toISOString(),
-    status: "Pending Approval",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-7",
-    orderId: "RS-1027",
-    productName: "Smart Ferti-Meter v3 Probe",
-    quantity: 5,
-    retailerName: "Farms Depot",
-    priority: "Low",
-    timestamp: new Date(Date.now() - 3600000 * 3).toISOString(),
-    status: "Synced",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-8",
-    orderId: "RS-1028",
-    productName: "E-Paper Retail Label Tags (Pack of 10)",
-    quantity: 4,
-    retailerName: "Balaji Agrotech Co-op",
-    priority: "Low",
-    timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-    status: "Synced",
-    storageLocation: "Cloud"
-  },
-  {
-    id: "ord-9",
-    orderId: "RS-1029",
-    productName: "Soil Moisture Sensors v2.1",
-    quantity: 12,
-    retailerName: "Ram Prasad Fertilisers",
-    priority: "Medium",
-    timestamp: new Date(Date.now() - 3600000 * 1).toISOString(),
-    status: "Pending",
-    storageLocation: "ESP32 Local Buffer"
-  },
-  {
-    id: "ord-10",
-    orderId: "RS-1030",
-    productName: "Smart Drip-Irrig V2 Controller",
-    quantity: 1,
-    retailerName: "Karan Agri-Services Ltd",
-    priority: "High",
-    timestamp: new Date(Date.now() - 3600000 * 0.25).toISOString(),
-    status: "Proposed",
-    storageLocation: "ESP32 Local Buffer"
-  }
-];
+let orders: Order[] = [];
 
 let deviceStatus: DeviceStatus = {
   deviceId: "ESP32-RuralSync-001",
@@ -173,42 +62,14 @@ let deviceStatus: DeviceStatus = {
   uptime: 4850, // seconds
   status: "ONLINE",
   lastHeartbeat: new Date().toISOString(),
-  ordersStoredLocally: 2,
-  ordersSynced: 8,
+  ordersStoredLocally: 0,
+  ordersSynced: 0,
   failedSyncAttempts: 0
 };
 
-let deviceEvents: DeviceEvent[] = [
-  {
-    id: "evt-1",
-    event: "Device Booted Success - Firmware v1.2.0",
-    timestamp: new Date(Date.now() - 3600000 * 4).toISOString()
-  },
-  {
-    id: "evt-2",
-    event: "WiFi Network Connected (RuralNet_AM2)",
-    timestamp: new Date(Date.now() - 3600000 * 3.9).toISOString()
-  },
-  {
-    id: "evt-3",
-    event: "Heartbeat Established with Cloud Server",
-    timestamp: new Date(Date.now() - 3600000 * 3.8).toISOString()
-  },
-  {
-    id: "evt-4",
-    event: "Initial Sync Completed: 3 historically verified",
-    timestamp: new Date(Date.now() - 3600000 * 3.5).toISOString()
-  }
-];
+let deviceEvents: DeviceEvent[] = [];
 
-let syncLogs: SyncLog[] = [
-  {
-    id: "sync-1",
-    timestamp: new Date(Date.now() - 3600000 * 3.5).toISOString(),
-    ordersSynced: 3,
-    result: "Success: Verified and migrated to Cloud"
-  }
-];
+let syncLogs: SyncLog[] = [];
 
 // Global simulation control
 let isInternetAvailable = true;
@@ -540,153 +401,23 @@ async function startServer() {
   // ─── Demo Reset ────────────────────────────────────────────────────────────
 
   app.post("/api/demo/reset", (req, res) => {
-    orders = [
-      {
-        id: "ord-1",
-        orderId: "RS-1021",
-        productName: "Solar Irrigation Pump Controller",
-        quantity: 2,
-        retailerName: "AgriTech Rural Solutions",
-        priority: "High",
-        timestamp: new Date(Date.now() - 3600000 * 8).toISOString(),
-        status: "Delivered",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-2",
-        orderId: "RS-1022",
-        productName: "High-Yield Seed Kits (Wheat)",
-        quantity: 50,
-        retailerName: "Bhoomi Fertilizer Hub",
-        priority: "Medium",
-        timestamp: new Date(Date.now() - 3600000 * 7).toISOString(),
-        status: "In Transit",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-3",
-        orderId: "RS-1023",
-        productName: "Drip Irrigation Pipe Bundle (100m)",
-        quantity: 8,
-        retailerName: "GreenValley Co-operative",
-        priority: "Low",
-        timestamp: new Date(Date.now() - 3600000 * 6).toISOString(),
-        status: "Paid",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-4",
-        orderId: "RS-1024",
-        productName: "LoRa 915MHz Gateway Module",
-        quantity: 1,
-        retailerName: "Krishna Kalyan Bhandar",
-        priority: "High",
-        timestamp: new Date(Date.now() - 3600000 * 5.5).toISOString(),
-        status: "Payment Pending",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-5",
-        orderId: "RS-1025",
-        productName: "Organic Super-Phosphate (25kg)",
-        quantity: 20,
-        retailerName: "Maa Durga Fertilisers",
-        priority: "Medium",
-        timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
-        status: "Pending Approval",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-6",
-        orderId: "RS-1026",
-        productName: "Off-Grid Deep Cycle Battery 200Ah",
-        quantity: 3,
-        retailerName: "Agrikart Cooperative",
-        priority: "High",
-        timestamp: new Date(Date.now() - 3600000 * 4).toISOString(),
-        status: "Pending Approval",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-7",
-        orderId: "RS-1027",
-        productName: "Smart Ferti-Meter v3 Probe",
-        quantity: 5,
-        retailerName: "Farms Depot",
-        priority: "Low",
-        timestamp: new Date(Date.now() - 3600000 * 3).toISOString(),
-        status: "Synced",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-8",
-        orderId: "RS-1028",
-        productName: "E-Paper Retail Label Tags (Pack of 10)",
-        quantity: 4,
-        retailerName: "Balaji Agrotech Co-op",
-        priority: "Low",
-        timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-        status: "Synced",
-        storageLocation: "Cloud"
-      },
-      {
-        id: "ord-9",
-        orderId: "RS-1029",
-        productName: "Soil Moisture Sensors v2.1",
-        quantity: 12,
-        retailerName: "Ram Prasad Fertilisers",
-        priority: "Medium",
-        timestamp: new Date(Date.now() - 3600000 * 1).toISOString(),
-        status: "Pending",
-        storageLocation: "ESP32 Local Buffer"
-      },
-      {
-        id: "ord-10",
-        orderId: "RS-1030",
-        productName: "Smart Drip-Irrig V2 Controller",
-        quantity: 1,
-        retailerName: "Karan Agri-Services Ltd",
-        priority: "High",
-        timestamp: new Date(Date.now() - 3600000 * 0.25).toISOString(),
-        status: "Proposed",
-        storageLocation: "ESP32 Local Buffer"
-      }
-    ];
+    orders = [];
 
     deviceStatus = {
       deviceId: "ESP32-RuralSync-001",
       signalStrength: -65,
       memoryUsage: 38,
       cpuUsage: 12,
-      uptime: 4850,
+      uptime: 0,
       status: "ONLINE",
       lastHeartbeat: new Date().toISOString(),
-      ordersStoredLocally: 2,
-      ordersSynced: 8,
+      ordersStoredLocally: 0,
+      ordersSynced: 0,
       failedSyncAttempts: 0
     };
 
-    deviceEvents = [
-      {
-        id: "evt-1",
-        event: "Device Reset To Default Configuration",
-        timestamp: new Date().toISOString()
-      },
-      {
-        id: "evt-2",
-        event: "Initial Sync Completed: All records clean",
-        timestamp: new Date().toISOString()
-      }
-    ];
-
-    syncLogs = [
-      {
-        id: "sync-init",
-        timestamp: new Date().toISOString(),
-        ordersSynced: 3,
-        result: "Demo Database initialized successfully"
-      }
-    ];
+    deviceEvents = [];
+    syncLogs = [];
 
     isInternetAvailable = true;
     esp32Commands = [];

@@ -537,18 +537,7 @@ void setup() {
   } else {
     Serial.println("[LittleFS] Mounted successfully.");
     
-    // Seed initial dummy orders inside the LittleFS cache if none exist
-    if (!LittleFS.exists("/orders.txt")) {
-      Serial.println("[LittleFS] Seeding 3 initial dummy orders for demonstration...");
-      File file = LittleFS.open("/orders.txt", "w");
-      if (file) {
-        file.println("Smart Drip-Irrig V2,Krishi Kalyan Bhandar,High");
-        file.println("Off-Grid Battery Hub,Agrikart Cooperative,Medium");
-        file.println("Soil Probe Sensor,Farms Depot,Low");
-        file.close();
-      }
-    }
-    
+    // Dummy orders removed - starting with clean slate
     recountLocalBuffer();
   }
 
