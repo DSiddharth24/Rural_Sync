@@ -30,7 +30,7 @@ const char* WIFI_PASSWORD = "1234567890";
 const String SERVER_URL  = "https://rural-sync-sable.vercel.app/"; 
 
 // Pin Definitions
-#define BUTTON_PIN      12 // Push Button (Low when pressed)
+#define BUTTON_PIN      2  // Push Button (Low when pressed) on D2
 #define BUZZER_PIN      13 // Active buzzer / LED (HIGH = ON)
 #define OLED_RESET      -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS  0x3C // 128x64 OLED I2C Address
