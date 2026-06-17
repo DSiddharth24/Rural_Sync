@@ -1,0 +1,6 @@
+{
+  "name": "RuralSync",
+  "description": "Offline-First Retail Ordering System with ESP32-powered edge gateway & automatic synchronization",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
